@@ -16,18 +16,29 @@ pipeline {
 
     stages {
 
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Set Environment') {
             steps {
                 script {
-                    if (params.ENV == 'main') {
+                    def envName = params.ENV?.trim()
+
+                    echo "ENV PARAM VALUE: ${envName}"
+
+                    if (envName == "main") {
                         env.IMAGE_NAME = "nodemain:v1.0"
                         env.PORT = "3000"
-                    } else {
+                    } else if (envName == "dev") {
                         env.IMAGE_NAME = "nodedev:v1.0"
                         env.PORT = "3001"
+                    } else {
+                        error "Invalid ENV value: ${envName}"
                     }
 
-                    echo "Branch: ${params.ENV}"
                     echo "Image: ${env.IMAGE_NAME}"
                     echo "Port: ${env.PORT}"
                 }
