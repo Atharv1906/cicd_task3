@@ -16,11 +16,23 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git branch: params.ENV, url: 'https://github.com/Atharv1906/cicd_task3.git'
+        stage('Set Environment') {
+    steps {
+        script {
+            if (params.ENV == 'main') {
+                env.IMAGE_NAME = "nodemain:v1.0"
+                env.PORT = "3000"
+            } else {
+                env.IMAGE_NAME = "nodedev:v1.0"
+                env.PORT = "3001"
             }
+
+            echo "Branch: ${params.ENV}"
+            echo "Image: ${env.IMAGE_NAME}"
+            echo "Port: ${env.PORT}"
         }
+    }
+}
 
         stage('Set Environment') {
             steps {
