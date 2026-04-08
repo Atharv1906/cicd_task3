@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs "Node 7.8.0"
+    }
+
     parameters {
         choice(name: 'ENV', choices: ['main', 'dev'], description: 'Select Environment')
     }
@@ -14,7 +18,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: params.ENV, url: 'https://github.com/<your-username>/cicd-pipeline.git'
+                git branch: params.ENV, url: 'https://github.com/Atharv1906/cicd_task3.git'
             }
         }
 
@@ -29,6 +33,12 @@ pipeline {
                         env.PORT = "3001"
                     }
                 }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t ${IMAGE_NAME} .'
             }
         }
 
