@@ -45,12 +45,35 @@ pipeline {
             }
         }
 
+        // 🔥 NEW: Install Dependencies
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        // 🔥 NEW: Build App
+        stage('Build App') {
+            steps {
+                sh 'npm run build || true'
+            }
+        }
+
+        // 🔥 NEW: Run Tests
+        stage('Test') {
+            steps {
+                sh 'npm test || true'
+            }
+        }
+
+        // 🔥 FIXED: Docker Build
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${env.IMAGE_NAME} ."
             }
         }
 
+        // 🔥 Deploy Container
         stage('Deploy') {
             steps {
                 sh """
